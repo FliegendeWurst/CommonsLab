@@ -1,19 +1,20 @@
 package com.commonslab.commonslab.Utils.CustomViews;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import com.commonslab.commonslab.Fragments.LoginFragment;
+
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.fragment.app.Fragment;
 
 /**
  * Created by Valdio Veliu on 06/02/2017.
  */
 
-public class CustomEditText extends android.support.v7.widget.AppCompatEditText {
+public class CustomEditText extends AppCompatEditText {
     Context context;
     //Fragment that contains the EditText
     private static LoginFragment fragment;

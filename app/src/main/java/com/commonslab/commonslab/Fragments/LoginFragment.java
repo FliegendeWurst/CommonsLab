@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.commonslab.commonslab.R;
 import com.commonslab.commonslab.Utils.CustomViews.CustomEditText;
 import com.commonslab.commonslab.Utils.SharedPreferencesUtils.StorageUtil;
 
+import androidx.fragment.app.Fragment;
 import apiwrapper.commons.wikimedia.org.Commons;
 import apiwrapper.commons.wikimedia.org.Enums.CookieStatus;
 import apiwrapper.commons.wikimedia.org.Interfaces.LoginCallback;

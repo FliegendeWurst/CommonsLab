@@ -3,7 +3,6 @@ package com.commonslab.commonslab.Activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,6 +10,8 @@ import android.widget.ImageView;
 
 import com.commonslab.commonslab.R;
 import com.commonslab.commonslab.Utils.SharedPreferencesUtils.StorageUtil;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private static final long SPLASH_DURATION = 500;

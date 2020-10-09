@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.app.NotificationManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,16 +14,11 @@ import android.content.BroadcastReceiver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.session.MediaSessionManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.annotation.Nullable;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -35,6 +32,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.media2.session.MediaSession;
 import apiwrapper.commons.wikimedia.org.Enums.MediaType;
 import apiwrapper.commons.wikimedia.org.Models.Contribution;
 import apiwrapper.commons.wikimedia.org.Models.FeedItem;
@@ -67,8 +68,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     //MediaSession
     private MediaSessionManager mediaSessionManager;
-    private MediaSessionCompat mediaSession;
-    private MediaControllerCompat.TransportControls transportControls;
+    private MediaSession mediaSession;
+    //private MediaController.TransportControls transportControls;
 
     //AudioPlayer notification ID
     public static final int NOTIFICATION_ID = 101;
@@ -126,6 +127,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     //The system calls this method when an activity, requests the service be started
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
@@ -172,7 +174,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mediaSession.release();
+        mediaSession.close();
         removeNotification();
         return super.onUnbind(intent);
     }
@@ -525,25 +527,27 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     /**
      * MediaSession and Notification actions
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initMediaSession() throws RemoteException {
         if (mediaSessionManager != null) return; //mediaSessionManager exists
 
         mediaSessionManager = (MediaSessionManager) getSystemService(Context.MEDIA_SESSION_SERVICE);
         // Create a new MediaSession
-        mediaSession = new MediaSessionCompat(getApplicationContext(), "AudioPlayer");
+        //mediaSession = new MediaSession.Builder(getApplicationContext(), null).build();
         //Get MediaSessions transport controls
-        transportControls = mediaSession.getController().getTransportControls();
+        //transportControls = mediaSession.getController().getTransportControls();
         //set MediaSession -> ready to receive media commands
-        mediaSession.setActive(true);
+        //mediaSession.setActive(true);
         //indicate that the MediaSession handles transport control commands
         // through its MediaSessionCompat.Callback.
-        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        //mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
         //Set mediaSession's MetaData
         updateMetaData();
 
         // Attach Callback to receive MediaSession updates
-        mediaSession.setCallback(new MediaSessionCompat.Callback() {
+        /*
+        mediaSession.setCallback(new MediaSession.SessionCallback() {
             // Implement callbacks
             @Override
             public void onPlay() {
@@ -588,6 +592,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 super.onSeekTo(position);
             }
         });
+         */
     }
 
     private void metadataBackgroundImageLoad() {
@@ -628,12 +633,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             metadataBackgroundImageLoad();
 
         // Update the current metadata
-        mediaSession.setMetadata(new MediaMetadataCompat.Builder()
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
+        /*
+        mediaSession.setMetadata(new MediaMetadata.Builder()
+                .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, albumArt)
 //                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, activeAudio.getArtist())
 //                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, activeAudio.getAlbum())
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, activeAudio.getTitle())
+                .putString(MediaMetadata.METADATA_KEY_TITLE, activeAudio.getTitle())
                 .build());
+         */
     }
 
     private void buildNotification(PlaybackStatus playbackStatus) {
@@ -664,14 +671,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 R.drawable.notification_logo);
 
         // Create a new Notification
-        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 // Hide the timestamp
                 .setShowWhen(false)
                 .setOngoing(true)
                 // Set the Notification style
-                .setStyle(new NotificationCompat.MediaStyle()
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         // Attach our MediaSession token
-                        .setMediaSession(mediaSession.getSessionToken())
+                        .setMediaSession(MediaSessionCompat.Token.fromToken(mediaSession.getToken()))
                         // Show our playback controls in the compat view
                         .setShowActionsInCompactView(0, 1, 2))
                 // Set the Notification color
@@ -726,6 +733,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         if (playbackAction == null || playbackAction.getAction() == null) return;
 
         String actionString = playbackAction.getAction();
+        /* TODO: fix media playback
         if (actionString.equalsIgnoreCase(ACTION_PLAY)) {
             transportControls.play();
         } else if (actionString.equalsIgnoreCase(ACTION_PAUSE)) {
@@ -737,6 +745,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
             transportControls.stop();
         }
+         */
     }
 
 

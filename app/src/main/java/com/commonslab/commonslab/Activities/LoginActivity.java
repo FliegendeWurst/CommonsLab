@@ -1,8 +1,6 @@
 package com.commonslab.commonslab.Activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -10,6 +8,10 @@ import android.widget.FrameLayout;
 import com.commonslab.commonslab.Fragments.LoginFragment;
 import com.commonslab.commonslab.Fragments.RegisterFragment;
 import com.commonslab.commonslab.R;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void loadLoginView() {
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         LoginFragment fragment = new LoginFragment();
         fragmentTransaction.add(R.id.login_container, fragment, "LoginFragment");
         fragmentTransaction.commit();
@@ -47,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loadRegisterScreen() {
         Fragment fragment = new RegisterFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
         fragmentTransaction.replace(R.id.login_container, fragment);
         fragmentTransaction.commit();
@@ -57,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loadLoginScreen() {
         Fragment fragment = new LoginFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
         fragmentTransaction.replace(R.id.login_container, fragment, "LoginFragment");
         fragmentTransaction.commit();

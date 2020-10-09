@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.commonslab.commonslab.Fragments.ImageFragment">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/feed_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -18,7 +18,7 @@
         app:popupTheme="@style/AppTheme"
         app:titleTextColor="@android:color/background_light" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerviewFeed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

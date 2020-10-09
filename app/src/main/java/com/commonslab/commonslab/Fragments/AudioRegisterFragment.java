@@ -6,9 +6,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StatFs;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +24,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import apiwrapper.commons.wikimedia.org.Enums.ContributionType;
 import top.oply.opuslib.OpusRecorder;
 
@@ -231,7 +232,7 @@ public class AudioRegisterFragment extends Fragment {
                         .commit();
 
                 Fragment uploadToCommonsFragment = UploadToCommonsFragment.newInstance(audioFilePath, false, ContributionType.AUDIO);
-                android.support.v4.app.FragmentTransaction transaction1 = getActivity().getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction1 = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction1.replace(R.id.drawer_layout, uploadToCommonsFragment, "UploadToCommonsFragment");// give your fragment container id in first parameter
                 transaction1.addToBackStack(null);  // if written, this transaction will be added to backstack
                 transaction1.commit();

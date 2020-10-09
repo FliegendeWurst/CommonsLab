@@ -19,20 +19,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.FileProvider;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatSeekBar;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+import androidx.core.view.GravityCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
@@ -48,6 +41,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
 import com.commonslab.commonslab.AudioPlayer.MediaControlsConstants;
@@ -72,6 +69,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 import apiwrapper.commons.wikimedia.org.Commons;
 import apiwrapper.commons.wikimedia.org.Enums.ContributionType;
 import apiwrapper.commons.wikimedia.org.Enums.CookieStatus;
@@ -152,9 +153,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        System.out.println("set content view");
         seekBarUpdateIntent = new Intent(SEEKBAR_UPDATE_BROADCAST);//for audio player to send seekbar progress changes
-        registerMediaControlsReceiver();
-        registerOPUSMediaControlsReceiver();
+        //TODO: registerMediaControlsReceiver();
+        //TODO: registerOPUSMediaControlsReceiver();
 
         //register seekBarReceiver
         registerReceiver(seekBarReceiver, new IntentFilter(MediaPlayerService.SEEKBAR_UPDATE));
@@ -350,14 +352,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (requestCode == VIDEO_CAPTURE) {
                 File file = new File(UriToAbsolutePath.getPath(getApplication(), data.getData()));
                 Fragment uploadToCommonsFragment = UploadToCommonsFragment.newInstance(file.getAbsolutePath(), false, ContributionType.VIDEO);
-                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.drawer_layout, uploadToCommonsFragment, "UploadToCommonsFragment");// give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                 transaction.commit();
             } else if (requestCode == IMAGE_CAPTURE) {
                 if (capturedPhotoPath != null) {
                     Fragment uploadToCommonsFragment = UploadToCommonsFragment.newInstance(capturedPhotoPath, true, ContributionType.IMAGE);
-                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.drawer_layout, uploadToCommonsFragment, "UploadToCommonsFragment");// give your fragment container id in first parameter
                     transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                     transaction.commit();
@@ -368,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 File file = new File(UriToAbsolutePath.getPath(getApplication(), data.getData()));
                 if (file.exists()) {
                     Fragment uploadToCommonsFragment = UploadToCommonsFragment.newInstance(file.getAbsolutePath(), false, ContributionType.IMAGE);
-                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.drawer_layout, uploadToCommonsFragment, "UploadToCommonsFragment");// give your fragment container id in first parameter
                     transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                     transaction.commit();
@@ -395,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupNavView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -411,10 +413,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //Initialize ViewPager & Tabs with Fragments
     private void initViewPagerAndTabs() {
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         pagerAdapter = new TabbedPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
         customizeTabFont();
     }
@@ -479,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_pod) {
             //Picture of the day
             Fragment uploadToCommonsFragment = PODFragment.newInstance();
-            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.drawer_layout, uploadToCommonsFragment, "PODFragment");// give your fragment container id in first parameter
             transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
             transaction.commit();
@@ -487,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_mod) {
             //Media of the day
             Fragment uploadToCommonsFragment = MODFragment.newInstance();
-            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.drawer_layout, uploadToCommonsFragment, "MODFragment");// give your fragment container id in first parameter
             transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
             transaction.commit();
@@ -839,8 +841,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void loadUploadScreen(String videoAbsolutePath) {
 //        File file = new File( mNextVideoAbsolutePath);
-        android.support.v4.app.Fragment uploadToCommonsFragment = UploadToCommonsFragment.newInstance(videoAbsolutePath, false, ContributionType.VIDEO);
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment uploadToCommonsFragment = UploadToCommonsFragment.newInstance(videoAbsolutePath, false, ContributionType.VIDEO);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.drawer_layout, uploadToCommonsFragment, "UploadToCommonsFragment");// give your fragment container id in first parameter
         transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
         transaction.commit();
@@ -1140,7 +1142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // Already have permission
                 uploadMenu.close(true);
                 Fragment audioRegisterFragment = AudioRegisterFragment.newInstance();
-                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.drawer_layout, audioRegisterFragment, "AudioRegisterFragment");// give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                 transaction.commit();

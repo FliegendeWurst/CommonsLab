@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.commonslab.commonslab.R;
 
+import androidx.appcompat.app.AppCompatActivity;
 import apiwrapper.commons.wikimedia.org.Models.Contribution;
 
 public class VideoPlayerActivity extends AppCompatActivity {
@@ -28,8 +28,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
-        videoView = (VideoView) findViewById(R.id.videoView);
-        loadingScreen = (FrameLayout) findViewById(R.id.progressBarContainer);
+        videoView = findViewById(R.id.videoView);
+        loadingScreen = findViewById(R.id.progressBarContainer);
 
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override

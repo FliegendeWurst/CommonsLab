@@ -27,7 +27,7 @@
                 android:src="@drawable/player_image"
                 android:transitionName="@string/expandTransition" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/upload_titleContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,9 +46,9 @@
 
                     android:textSize="16sp" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/upload_descriptionContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,10 +67,10 @@
                     android:inputType="textMultiLine"
                     android:textSize="16sp" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/upload_commentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,9 +89,9 @@
                     android:textSize="16sp"
                     />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
@@ -103,7 +103,7 @@
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <LinearLayout

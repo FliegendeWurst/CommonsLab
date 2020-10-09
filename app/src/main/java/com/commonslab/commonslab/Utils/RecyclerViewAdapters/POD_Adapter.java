@@ -2,7 +2,6 @@ package com.commonslab.commonslab.Utils.RecyclerViewAdapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import com.commonslab.commonslab.R;
 
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.RecyclerView;
 import apiwrapper.commons.wikimedia.org.Models.FeedItem;
 
 import static com.bumptech.glide.request.target.Target.SIZE_ORIGINAL;

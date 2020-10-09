@@ -6,15 +6,15 @@ repositories {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.commonslab.commonslab"
-        minSdkVersion 17
-        targetSdkVersion 25
+        minSdkVersion 19
+        targetSdkVersion 29
         versionCode 3
         versionName "1.2"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -22,28 +22,43 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0', changing: true
-    compile 'com.android.support:support-compat:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile "com.android.support:support-v4:25.3.1"
-    compile "com.android.support:support-v13:25.3.1"
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.github.CommonsLab:CommonsAPI:1.1.9'
-    compile 'com.github.clans:fab:1.6.4'
-    compile 'pub.devrel:easypermissions:0.3.0'
-    compile 'top.oply.opuslib:opuslib:1.0.2'
-    testCompile 'junit:junit:4.12'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5', changing: true
+    implementation 'androidx.core:core:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "androidx.media2:media2-session:1.0.3"
+    implementation 'com.github.CommonsLab:CommonsAPI:1.1.9'
+    implementation 'com.github.clans:fab:1.6.4'
+    implementation 'pub.devrel:easypermissions:0.3.0'
+    implementation 'top.oply.opuslib:opuslib:1.0.2'
+    testImplementation 'junit:junit:4.13'
     //for playing .opus audio files in older devices
-    compile 'com.github.CommonsLab:openplayer-android:-SNAPSHOT'
-
+    implementation 'com.github.CommonsLab:openplayer-android:-SNAPSHOT'
 }
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == "androidx") {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion "${targetSdk}.+"
+            }
+        }
+    }
+}
+
